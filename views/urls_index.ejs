@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% include ./partials/_header %>
+</head>
+<body>
+  <% for (number in urls) { %>
+  <li> <%= urls[number]%>, <%= number %></li>
+  <% }%>
+<a href="test.com"> Click here to shorten</a>
+</body>
+</html>
