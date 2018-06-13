@@ -5,8 +5,13 @@
 </head>
 <body>
   <% for (number in urls) { %>
-  <li> <%= urls[number]%>, <%= number %></li>
+    <form method="POST" action="/urls/<%= number %>/delete">
+      <li>  <%= number %>, <a href=<%= urls[number]%>> <%= urls[number]%></a>
+      <a href = <%= number %>> Edit</a>
+      <input type="submit" value="Delete">
+    </form>
+  </li>
   <% }%>
-<a href="test.com"> Click here to shorten</a>
+
 </body>
 </html>
