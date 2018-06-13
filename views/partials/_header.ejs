@@ -1,5 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>TinyApp</title>
-</head>
+<% if(!locals.username){ %>
+  <form action="/login" method="POST" style="margin:150px;">
+    <input id="login" type="text" name="username" placeholder="username" style="width: 100px">
+    <input type="submit" value="Submit">
+  </form>
+  <% } else{ %>
+    <form action="/logout" method="POST" style="margin:150px;">
+      <%= username %>
+        <input type="submit" value="Logout">
+    </form>
+    <% } %>

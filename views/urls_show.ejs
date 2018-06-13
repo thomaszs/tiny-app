@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <% include ./partials/_header %>
 </head>
-<body> 
+<body>
+    <% include ./partials/_header %>
     <form action="/urls/<%=shortURL%>" method="POST" style="margin:150px;">
       <h3>ShortURL: <%=shortURL%></h3> 
       <input id="newlongURL" type="text" name="longURL" placeholder=<%=longURL%>>

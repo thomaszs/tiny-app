@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <% include ./partials/_header %>
 </head>
 <body>
+  <% include ./partials/_header %>
   <% for (number in urls) { %>
     <form method="POST" action="/urls/<%= number %>/delete">
       <li>  <%= number %>, <a href=<%= urls[number]%>> <%= urls[number]%></a>
