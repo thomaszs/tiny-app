@@ -31,6 +31,11 @@ const users = {
     id: "user2RandomID",
     email: "user2@example.com",
     password: "dishwasher-funk"
+  },
+  "user1": {
+    id: "user2RandomID",
+    email: "user1@abc.com",
+    password: "123"
   }
 }
 
@@ -40,6 +45,10 @@ app.get("/", (req, res) => {
 
 app.get("/register", (req, res) => {
   res.render("urls_register");
+});
+
+app.get("/login", (req, res) => {
+  res.render("urls_login");
 });
 
 app.get("/urls.json", (req, res) => {
@@ -55,21 +64,21 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  const usersID = req.cookies['user_id'];
+  const userID = req.cookies['user_id'];
   let templateVars = {
     urls: urlDatabase,
-    users: usersID
+    user: users[userID]
   };
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/:id", (req, res) => {
-  const usersID = req.cookies['user_id'];
+  const userID = req.cookies['user_id'];
   let longURL = urlDatabase[req.params.id];
   let templateVars = {
     shortURL: req.params.id,
     longURL: longURL,
-    users: usersID
+    user: users[userID]
   };
   res.render("urls_show", templateVars);
 });
@@ -87,20 +96,20 @@ app.post("/register", (req, res) => {
   let password = req.body.password;
 
 
-//Check for empty email or password and send 400 status code
+  //Check for empty email or password and send 400 status code
   if (!email || !password) {
     res.status(400).send("Email or password can't be empty");
     return;
   } //Check for exising email address and send 400 status code
-  
+
   let userExists = false;
   for (var existing in users) {
     let existingEmail = users[existing]['email'];
     if (existingEmail === email) {
       userExists = true
       break;
+    }
   }
-}
 
   if (userExists === true) {
     res.status(400).send("User already exist");
@@ -117,16 +126,39 @@ app.post("/register", (req, res) => {
 
 });
 
-// Use POST request to set user cookie upon login
 app.post("/login", (req, res) => {
-  name = req.body.username
-  res.cookie("username", name);
-  res.redirect("/urls/");
+  let email = req.body.email;
+  let password = req.body.password;
+
+  let emailMatch = false;
+  let passMatch = false;
+  for (var id in users) {
+    let dataEmail = users[id]['email'];
+    let dataPassword = users[id]['password'];
+
+    if (dataEmail === email) {
+      emailMatch = true;
+      if (dataPassword === password) {
+        passMatch = true;
+        break;
+      } else if (dataEmail !== email) {}
+      if (dataPassword !== password) {}
+    }
+  }
+
+  if (emailMatch || passMatch === true) {
+    res.cookie("user_id", users[id].id);
+    res.redirect("/urls/");
+    return;
+  } else {
+    res.status(403).send("Your email or password is incorrect");
+    return;
+  }
 });
 
 // Clear cookie
 app.post("/logout", (req, res) => {
-  res.clearCookie("username");
+  res.clearCookie("user_id");
   res.redirect("/urls/");
 });
 
