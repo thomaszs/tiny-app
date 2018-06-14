@@ -7,7 +7,7 @@
   <% for (number in urls) { %>
     <form method="POST" action="/urls/<%= number %>/delete">
       <li>  <%= number %> <a href=<%= urls[number]%>> <%= urls[number]%></a>
-      <a href = <%= number %>> Edit</a>
+        <a href=<%= number %> class="badge badge-warning">Edit</a>
       <input type="submit" value="Delete">
     </li>
     </form>
