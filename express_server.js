@@ -16,21 +16,20 @@ function generateRandomString() {
   return Math.random().toString(36).substring(2, 8) // Used substring instead of slice to get strings
 }
 
-// Defined database
 var urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
 
-const users = { 
+const users = {
   "userRandomID": {
-    id: "userRandomID", 
-    email: "user@example.com", 
+    id: "userRandomID",
+    email: "user@example.com",
     password: "purple-monkey-dinosaur"
   },
- "user2RandomID": {
-    id: "user2RandomID", 
-    email: "user2@example.com", 
+  "user2RandomID": {
+    id: "user2RandomID",
+    email: "user2@example.com",
     password: "dishwasher-funk"
   }
 }
@@ -56,19 +55,21 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
+  const usersID = req.cookies['user_id'];
   let templateVars = {
     urls: urlDatabase,
-    username: req.cookies["username"]
+    users: usersID
   };
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/:id", (req, res) => {
+  const usersID = req.cookies['user_id'];
   let longURL = urlDatabase[req.params.id];
   let templateVars = {
     shortURL: req.params.id,
     longURL: longURL,
-    username: req.cookies["username"]
+    users: usersID
   };
   res.render("urls_show", templateVars);
 });
@@ -84,25 +85,39 @@ app.post("/register", (req, res) => {
   let id = generateRandomString();
   let email = req.body.email;
   let password = req.body.password;
-  users[id] = {id:id, email:email, password:password};
-  res.cookie("user_id", id);  
 
-  //Check for empty email or password and send 400 status code
+
+//Check for empty email or password and send 400 status code
   if (!email || !password) {
-    res.statusCode = 400;
-    res.send("Email or password can't be empty")
+    res.status(400).send("Email or password can't be empty");
+    return;
+  } //Check for exising email address and send 400 status code
+  
+  let userExists = false;
+  for (var existing in users) {
+    let existingEmail = users[existing]['email'];
+    if (existingEmail === email) {
+      userExists = true
+      break;
+  }
+}
+
+  if (userExists === true) {
+    res.status(400).send("User already exist");
+  } else if (userExists === false) {
+    //Store user information in users database and add cookie
+    users[id] = {
+      id: id,
+      email: email,
+      password: password
+    };
+    res.cookie("user_id", users[id].id);
+    res.redirect("/urls/");
   }
 
-  //Check for exising email address and send 400 status code
-  for (var duplicate in users) {
-    if (users[duplicate]["email"] === email)
-        res.statusCode = 400
-        res.send("User already exist")      
-  } 
-  res.redirect("/urls/"); 
 });
 
-// Use POST request to set user cookie
+// Use POST request to set user cookie upon login
 app.post("/login", (req, res) => {
   name = req.body.username
   res.cookie("username", name);
