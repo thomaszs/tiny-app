@@ -42,7 +42,7 @@ app.get("/urls/new", (req, res) => {
 app.get("/urls", (req, res) => {
   let templateVars = {
     urls: urlDatabase,
-    username: req.cookies["username"],
+    username: req.cookies["username"]
   };
   res.render("urls_index", templateVars);
 });
@@ -63,7 +63,7 @@ app.get("/u/:shortURL", (req, res) => {
   res.redirect(longURL);
 });
 
-// Use POST request get set user cookie
+// Use POST request to set user cookie
 app.post("/login", (req, res) => {
   name = req.body.username
   res.cookie("username", name);
