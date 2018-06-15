@@ -5,14 +5,28 @@
 <body>
   <h1>Tiny App!</h1>
   <% include ./partials/_header %>
-  <% for (number in urls) { %>
-    <form method="POST" action="/urls/<%= number %>/delete">
-      <li>  <%= number %> <a href=<%= urls[number]%>> <%= urls[number]%></a>
-        <a href=<%= number %> class="badge badge-warning">Edit</a>
-      <input type="submit" value="Delete">
-    </li>
+  <% for (key in urls) { %>
+    <form method="POST" action="/urls/<%= key %>/delete">
+      <ul>
+        <li>  
+          <%= key %>
+          
+          <a href=<%= urls[key].longUrl %>>
+            <%= urls[key].longUrl %>
+          </a>
+          <% if (user && user.id === urls[key].userID) { %> 
+            <a href= <%= key %> class="badge badge-warning">
+              Edit
+            </a>
+          <% } %>
+
+          <input type="submit" value="Delete">
+        </li>
+      </ul>
     </form>
   <% }%>
-
+  <form method="GET" action="/urls/new/">
+    <input type="submit" class="btn btn primary" value="Create New">
+    </form> 
 </body>
 </html>

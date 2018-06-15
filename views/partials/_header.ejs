@@ -14,7 +14,10 @@
 
 <body>
   <% if (typeof user!== 'undefined'){ %>
-
+    <form action="/logout" method="POST" style="margin:150px;">
+      <span class="badge badge-pill badge-primary"> Welcome! <%=user.email%> </span>
+      <input class ="btn btn-warning" type="submit" value="Logout">
+  </form>
   <% } else { %>
     <a href="/Register"class="badge badge-primary">Register</a>  
     <a href="/Login"class="badge badge-secondary">Login</a>
