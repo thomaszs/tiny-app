@@ -106,9 +106,8 @@ app.get("/urls/:id", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
-// Used a separate /u/ directory to test out redirect
 app.get("/u/:shortURL", (req, res) => {
-  let longURL = urlDatabase[req.params.shortURL]; // Used shortURL as key to get long URL value
+  let longURL = urlDatabase[req.params.shortURL].longUrl; // Used shortURL as key to get long URL value
   res.redirect(longURL);
 });
 
