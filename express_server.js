@@ -1,6 +1,7 @@
 var express = require("express");
 var cookieParser = require('cookie-parser');
 const bodyParser = require("body-parser");
+var bcrypt = require('bcryptjs');
 var app = express();
 var PORT = 8080; // default port 8080
 
@@ -25,7 +26,7 @@ const urlDatabase = {
   },
   "9sm5xK": {
     shortUrl: "9sm5xK",
-    longUrl:"http://www.google.com",
+    longUrl: "http://www.google.com",
     userID: "user2"
   }
 };
@@ -50,8 +51,9 @@ const users = {
 
 app.get("/", (req, res) => {
   const userID = req.cookies['user_id'];
-  if (userID !== urlDatabase[req.params.id]['userID']) {
-    res.send("Please log in first!");
+  if (!userID) {
+    res.redirect("/login");
+    return;
   }
   res.redirect("/urls");
 });
@@ -77,7 +79,7 @@ app.get("/urls/new", (req, res) => {
   if (!userID) {
     res.redirect("/login/");
   }
-  res.render("urls_new");
+  res.render("urls_new", {user: users[userID]});
 });
 
 app.get("/urls", (req, res) => {
@@ -116,7 +118,7 @@ app.post("/register", (req, res) => {
   let id = generateRandomString();
   let email = req.body.email;
   let password = req.body.password;
-
+  let hashedPassword = bcrypt.hashSync(password,10);
 
   //Check for empty email or password and send 400 status code
   if (!email || !password) {
@@ -140,7 +142,7 @@ app.post("/register", (req, res) => {
     users[id] = {
       id: id,
       email: email,
-      password: password
+      hashedPassword: hashedPassword
     };
     res.cookie("user_id", users[id].id);
     res.redirect("/urls/");
@@ -156,15 +158,15 @@ app.post("/login", (req, res) => {
   let passMatch = false;
   for (var id in users) {
     let dataEmail = users[id]['email'];
-    let dataPassword = users[id]['password'];
+    let dataPassword = users[id]['hashedPassword'];
 
     if (dataEmail === email) {
       emailMatch = true;
-      if (dataPassword === password) {
+      if (bcrypt.compareSync(password, dataPassword)) {
         passMatch = true;
         break;
       } else if (dataEmail !== email) {}
-      if (dataPassword !== password) {}
+      if (bcrypt.compareSync(password, dataPassword)) {}
     }
   }
 
@@ -205,8 +207,8 @@ app.post("/urls/:id/delete", (req, res) => {
     delete urlDatabase[req.params.id];
     res.redirect("/urls/");
   }
-  });
-  
+});
+
 app.post("/urls/:id/", (req, res) => {
   urlDatabase[req.params.id]['longUrl'] = req.body.longURL
   res.redirect("/urls/");
@@ -221,7 +223,7 @@ function urlsForUser(id) {
   for (key in urlDatabase) {
     if (id === urlDatabase[key].userID) {
       newDataBase[key] = urlDatabase[key];
+    }
   }
-}
-return newDataBase; 
+  return newDataBase;
 }
