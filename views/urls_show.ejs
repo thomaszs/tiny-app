@@ -5,10 +5,13 @@
 <body>
     <% include ./partials/_header %>
     <form action="/urls/<%=shortURL%>" method="POST" style="margin:150px;">
-      <h3>ShortURL: <%=shortURL%></h3> 
+    <h2>ShortURL: <span class="badge badge-secondary"><%=shortURL%></span></h2>
+      <br>
+    <h2>LongURL: <span class="badge badge-secondary"><%=longURL%></span></h2>
+      <br>
       <input id="newlongURL" type="text" name="longURL" placeholder=<%=longURL%>>
-      <input type="submit" value="Update">
+      <input type="submit" value="Update Your URL">
     </form>
- 
+    <h3> <a href="/urls "class="badge badge-primary badge-lg">Home</a> 
 </body>
 </html>

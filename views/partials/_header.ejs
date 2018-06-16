@@ -14,13 +14,22 @@
 
 <body>
   <% if (typeof user!== 'undefined'){ %>
-    <form action="/logout" method="POST" style="margin:150px;">
-      <span class="badge badge-pill badge-primary"> Welcome! <%=user.email%> </span>
+<div class="jumbotron">
+  <h1 class="display-4">Welcome! <%=user.email%></h1>
+  <form action="/logout" method="POST">
       <input class ="btn btn-warning" type="submit" value="Logout">
-  </form>
+        </form>
+  <hr class="my-4">
+  
   <% } else { %>
-    <a href="/Register"class="badge badge-primary">Register</a>  
-    <a href="/Login"class="badge badge-secondary">Login</a>
+<div class="jumbotron">
+  <h1 class="display-4">Tiny App!</h1>
+  <p class="lead">This is where magic happens, with a simple click you can shrink your crazy long URL! </p>
+  <hr class="my-4">
+   <h3> <a href="/Register"class="badge badge-primary badge-lg">Register</a> 
+    <a href="/Login"class="badge badge-secondary badge-lg">Login</a> </h3>
+
+</div>
   <% } %>
 </body>
 

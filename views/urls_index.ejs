@@ -3,30 +3,30 @@
 <head>
 </head>
 <body>
-  <h1>Tiny App!</h1>
   <% include ./partials/_header %>
   <% for (key in urls) { %>
-    <form method="POST" action="/urls/<%= key %>/delete">
-      <ul>
-        <li>  
+    <form method="POST" action="/urls/<%= key %>/delete">    
           <%= key %>
           
           <a href=<%= urls[key].longUrl %>>
             <%= urls[key].longUrl %>
           </a>
           <% if (user && user.id === urls[key].userID) { %> 
-            <a href= <%= key %> class="badge badge-warning">
+            <a href=<%= key %> class="badge badge-warning badge-lg">
               Edit
             </a>
           <% } %>
 
-          <input type="submit" value="Delete">
-        </li>
-      </ul>
+          <input type="submit" value="Delete"class="btn btn-danger btn-sm">
     </form>
   <% }%>
-  <form method="GET" action="/urls/new">
-    <input type="submit" class="btn btn primary" value="Create New">
+  <% if (user && user.id) { %>
+    <form method="GET" action="/urls/new/">
+    <input type="submit" class="btn btn-primary" value="Create New URL">
     </form> 
+      <hr class="my-4">
+
+ <% } %>
+ 
 </body>
 </html>
