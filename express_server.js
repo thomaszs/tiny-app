@@ -20,7 +20,7 @@ function generateRandomString() {
   return Math.random().toString(36).substring(2, 8) // Used substring instead of slice to get strings
 }
 
-
+// Placeholder URL and users for testing purposes
 const urlDatabase = {
   "b2xVn2": {
     shortUrl: "b2xVn2",
@@ -81,16 +81,14 @@ app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
-app.get("/hello", (req, res) => {
-  res.end("<html><body>Hello <b>World</b></body></html>\n");
-});
-
 app.get("/urls/new", (req, res) => {
   const userID = req.session.user_id;
   if (!userID) {
     res.redirect("/login/");
   }
-  res.render("urls_new", {user: users[userID]});
+  res.render("urls_new", {
+    user: users[userID]
+  });
 });
 
 app.get("/urls", (req, res) => {
@@ -118,22 +116,20 @@ app.get("/urls/:id", (req, res) => {
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  let longURL = urlDatabase[req.params.shortURL].longUrl; // Used shortURL as key to get long URL value
+  let longURL = urlDatabase[req.params.shortURL].longUrl;
   res.redirect(longURL);
 });
 
-// POST for register
 app.post("/register", (req, res) => {
   let id = generateRandomString();
   let email = req.body.email;
   let password = req.body.password;
-  let hashedPassword = bcrypt.hashSync(password,10);
+  let hashedPassword = bcrypt.hashSync(password, 10);
 
-  //Check for empty email or password and send 400 status code
   if (!email || !password) {
     res.status(400).send("Email or password can't be empty");
     return;
-  } //Check for exising email address and send 400 status code
+  }
 
   let userExists = false;
   for (var existing in users) {
@@ -147,7 +143,6 @@ app.post("/register", (req, res) => {
   if (userExists) {
     res.status(400).send("User already exist");
   } else if (!userExists) {
-    //Store user information in users database and add cookie
     users[id] = {
       id,
       email,
@@ -187,27 +182,23 @@ app.post("/login", (req, res) => {
   }
 });
 
-// Clear cookie
 app.post("/logout", (req, res) => {
   req.session = null;
   res.redirect("/urls/");
 });
 
-// POST request for /urls
 app.post("/urls", (req, res) => {
-  let longUrl = req.body.longURL; //Took input from the form 
+  let longUrl = req.body.longURL;
   let shortUrl = generateRandomString();
   const userID = req.session.user_id;
-
   urlDatabase[shortUrl] = {
     shortUrl,
     longUrl,
     userID,
   }
-  res.redirect("/urls/" + shortUrl); // Redirected to /urls/:shortURL
+  res.redirect("/urls/" + shortUrl); 
 });
 
-// POST delete on /urls/:id request by using javascript delete method
 app.post("/urls/:id/delete", (req, res) => {
   const userID = req.session.user_id;
   if (userID === urlDatabase[req.params.id]['userID']) {
@@ -225,6 +216,7 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
 
+//Helper function to filter existing database and add related object to new database
 function urlsForUser(id) {
   let newDataBase = {};
   for (key in urlDatabase) {
