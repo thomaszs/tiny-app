@@ -2,6 +2,8 @@
 TinyApp is a full stack web application built with Node and Express that allows us to use normal long URLs to create short 6 digit URLs! So you can share your links with friend more conveniently.
 
 ## Final Product 
+![Screenshot of URLs page"](https://github.com/thomaszs/tiny-app/blob/master/docs/urls-pages.png)
+![Screenshot of URLs page"](https://github.com/thomaszs/tiny-app/blob/master/docs/register-page.png?raw=true)
 
 ## Dependencies 
 - Node.js
